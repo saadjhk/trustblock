@@ -21,5 +21,6 @@ export class EmailConfirmationController {
       confirmationData.token,
     );
     await this.emailConfirmationService.confirmEmail(email);
+    return { isVerified: true };
   }
 }

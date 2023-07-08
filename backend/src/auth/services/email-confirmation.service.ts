@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import EmailService from 'src/email/email.service';
@@ -31,6 +31,7 @@ export class EmailConfirmationService {
     )}?token=${token}`;
 
     const text = `Welcome to the application. To confirm the email address, click here: ${url}`;
+    Logger.log(token);
 
     return this.emailService.sendMail({
       to: email,

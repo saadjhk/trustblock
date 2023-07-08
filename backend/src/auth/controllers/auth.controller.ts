@@ -5,6 +5,8 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  Req,
+  Logger,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
@@ -39,9 +41,9 @@ export class AuthController {
     );
 
     if (isRegistered) {
-      // if (!user.isVerifiedEmail) {
-      //   throw new UnauthorizedException('Email not verified');
-      // }
+      if (!user.isVerifiedEmail) {
+        throw new UnauthorizedException('Email not verified');
+      }
 
       const payload = {
         user: {
@@ -61,5 +63,10 @@ export class AuthController {
     } else {
       throw new UnauthorizedException('Invalid email ID or password');
     }
+  }
+
+  @Post('callback/credentials')
+  async credentialsCallback(@Req() request) {
+    Logger.log(request.body);
   }
 }

@@ -8,10 +8,11 @@ import { EmailConfirmationService } from './services/email-confirmation.service'
 import { EmailConfirmationController } from './controllers/email-confirmation.controller';
 import { EmailModule } from 'src/email/email.module';
 import { JwtModule } from '@nestjs/jwt';
+import { UsersController } from './controllers/users.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), JwtModule, EmailModule],
-  controllers: [AuthController, EmailConfirmationController],
+  controllers: [AuthController, EmailConfirmationController, UsersController],
   providers: [UsersService, AuthService, EmailConfirmationService],
   exports: [UsersService, AuthService],
 })
