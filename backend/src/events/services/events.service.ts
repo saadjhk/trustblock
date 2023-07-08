@@ -33,10 +33,11 @@ export default class EventsService {
     return event;
   }
 
-  async deleteEvent(eventId: number) {
+  async deleteEvent(eventId: number, user: User) {
     await this.eventsRepository.update(
       {
         id: eventId,
+        owner: user,
       },
       { isDeleted: true },
     );

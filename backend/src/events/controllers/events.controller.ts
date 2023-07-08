@@ -11,6 +11,7 @@ import {
   Param,
   ParseIntPipe,
   Put,
+  Delete,
 } from '@nestjs/common';
 import EventsService from '../services/events.service';
 import { CreateEventDto } from 'src/dto/create-event.dto';
@@ -59,6 +60,16 @@ export class EventsController {
     event.owner = undefined;
     event.isDeleted = undefined;
     return event;
+  }
+
+  @UseGuards(AuthGuard)
+  @Delete('delete/:id')
+  async deleteEvent(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() request: AuthenticatedRequest,
+  ) {
+    await this.eventsService.deleteEvent(id, request.user);
+    return { message: 'Removed ' + id };
   }
 
   @HttpCode(HttpStatus.OK)
