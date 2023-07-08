@@ -43,20 +43,20 @@ export default class EventsService {
     );
   }
 
-  async getEventsPaginated(skip: number, take = 10) {
+  async getEventsPaginated(page = 1, take = 10) {
     return this.eventsRepository.find({
       where: { isDeleted: false },
       order: { date: 'ASC' },
       take,
-      skip,
+      skip: (page - 1) * take,
     });
   }
 
-  async getUserEventsPaginated(user: User, skip: number, take = 10) {
+  async getUserEventsPaginated(user: User, page = 1, take = 10) {
     return this.eventsRepository.find({
       where: { owner: user, isDeleted: false },
       take,
-      skip,
+      skip: (page - 1) * take,
     });
   }
 }
