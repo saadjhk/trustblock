@@ -44,7 +44,6 @@ export class EventsController {
   @Get('my-events')
   async myEvents(
     @Req() request: AuthenticatedRequest,
-    @Body() createEventDto: CreateEventDto,
     @Query('page') page = 0,
   ) {
     const events = this.eventsService.getUserEventsPaginated(
