@@ -11,10 +11,7 @@ export default function MyEvents() {
   const router = useRouter();
   const [events, setEvents] = useState<EEvent[]>([]);
   const [failedFetch, setFailedFetch] = useState<boolean>(false);
-
-  const [isUpdating, setIsUpdating] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const { setEventToBeUpdated } = useUpdateEventContext();
 
   useEffect(() => {
@@ -81,7 +78,7 @@ export default function MyEvents() {
               actionsAvailable={[EventOptions.Delete, EventOptions.Update]}
               onDelete={deleteEvent}
               onUpdate={updateEvent}
-              disableActions={isDeleting || isUpdating}
+              disableActions={isDeleting}
             />
           );
         })}
