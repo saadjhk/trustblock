@@ -46,6 +46,7 @@ export default class EventsService {
   async getEventsPaginated(skip: number, take = 10) {
     return this.eventsRepository.find({
       where: { isDeleted: false },
+      order: { date: 'ASC' },
       take,
       skip,
     });
