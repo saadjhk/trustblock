@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class Event {
   @PrimaryGeneratedColumn({
     type: 'bigint',
   })
@@ -10,15 +10,10 @@ export class User {
   @Column({
     nullable: false,
   })
-  email: string;
+  name: string;
 
   @Column({
     nullable: false,
   })
-  password: string;
-
-  @Column({
-    default: false,
-  })
-  isVerifiedEmail: boolean;
+  description: string;
 }

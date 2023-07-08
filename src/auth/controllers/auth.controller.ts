@@ -5,7 +5,6 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
-  Get,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { CreateUserDto } from 'src/dto/create-user.dto';
@@ -13,8 +12,6 @@ import { EmailConfirmationService } from '../services/email-confirmation.service
 import { SignInUserDto } from 'src/dto/sign-in-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../services/users.service';
-
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -22,7 +19,6 @@ export class AuthController {
     private emailConfirmationService: EmailConfirmationService,
     private jwtService: JwtService,
     private configService: ConfigService,
-    private usersService: UsersService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -57,17 +53,12 @@ export class AuthController {
         secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
         expiresIn: `${this.configService.get(
           'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
-        )}s`,
+        )}`,
       });
 
-      return { access_token: token };
+      return { accessToken: token };
     } else {
       throw new UnauthorizedException('Invalid email ID or password');
     }
-  }
-
-  @Get('users')
-  async getUsers() {
-    return this.usersService.getUsers();
   }
 }
