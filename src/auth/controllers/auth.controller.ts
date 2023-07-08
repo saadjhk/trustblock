@@ -45,7 +45,8 @@ export class AuthController {
 
       const payload = {
         user: {
-          email: signinDto.email,
+          email: user.email,
+          id: user.id,
         },
       };
 
