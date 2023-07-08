@@ -17,7 +17,7 @@ export const authOptions: AuthOptions = {
 
             if (credentials) {
                 try {
-                    authCall = await axios.post(process.env.SERVER_BASE + '/api/auth/signin', {
+                    authCall = await axios.post(process.env.NEXT_PUBLIC_SERVER_BASE + '/api/auth/signin', {
                         email: credentials.email,
                         password: credentials.password
                     })
@@ -27,7 +27,7 @@ export const authOptions: AuthOptions = {
                   }
                   
                   if (!!authCall && authCall.data.accessToken) {
-                    profileCall = await axios.get(process.env.SERVER_BASE + '/api/users/profile', {
+                    profileCall = await axios.get(process.env.NEXT_PUBLIC_SERVER_BASE + '/api/users/profile', {
                       headers: {
                         'Authorization': 'Bearer ' + authCall.data.accessToken
                       }

@@ -1,184 +1,56 @@
 import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { EEvent } from "../interfaces/event";
+import axios from "axios";
+import EventCard from "../components/EventCard/EventCard";
 export default function Home() {
-  const session = useSession();
+  const [events, setEvents] = useState<EEvent[]>([]);
+  const [failedFetch, setFailedFetch] = useState<boolean>(false);
+
+  useEffect(() => {
+    axios({
+      url: process.env.NEXT_PUBLIC_SERVER_BASE + "/api/events",
+      method: "GET",
+    })
+      .then((response) => {
+        setEvents(response.data as EEvent[]);
+      })
+      .catch((err: any) => {
+        console.log(err.toString());
+        setFailedFetch(true);
+      });
+  }, []);
 
   return (
     <div className="container mx-auto p-8">
       <div className="flex flex-row flex-wrap -mx-2">
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 1"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 1">
-                  Card 1
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 2"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 2">
-                  Card 2
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 3"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 3">
-                  Card 3
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 4"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 4">
-                  Card 4
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 5"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 5">
-                  Card 5
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="w-full sm:w-1/2 md:w-1/3 mb-4 px-2">
-          <div className="relative bg-white rounded border">
-            <picture className="block bg-gray-200 border-b">
-              <img
-                className="block"
-                src="https://via.placeholder.com/800x600/EDF2F7/E2E8F0/&amp;text=Card"
-                alt="Card 6"
-              />
-            </picture>
-            <div className="p-4">
-              <h3 className="text-lg font-bold">
-                <a className="stretched-link" href="#" title="Card 6">
-                  Card 6
-                </a>
-              </h3>
-              <time
-                className="block mb-2 text-sm text-gray-600"
-                dateTime="2019-01-01"
-              >
-                1st January 2019
-              </time>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-            </div>
-          </div>
-        </div>
+        {events.map((e) => {
+          return <EventCard event={e} key={e.id} />;
+        })}
       </div>
+
+      {failedFetch && (
+          <div
+            className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+            role="alert"
+          >
+            <strong className="font-bold">Holy smokes!</strong>
+            <span className="block sm:inline">
+              Something seriously bad happened.
+            </span>
+            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <svg
+                className="fill-current h-6 w-6 text-red-500"
+                role="button"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <title>Close</title>
+                <path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z" />
+              </svg>
+            </span>
+          </div>
+        )}
     </div>
   );
 }
