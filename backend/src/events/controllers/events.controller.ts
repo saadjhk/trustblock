@@ -8,11 +8,15 @@ import {
   Get,
   Query,
   UseGuards,
+  Param,
+  ParseIntPipe,
+  Put,
 } from '@nestjs/common';
 import EventsService from '../services/events.service';
 import { CreateEventDto } from 'src/dto/create-event.dto';
 import { User } from 'src/entities';
 import { AuthGuard } from 'src/auth/auth-guard';
+import { UpdateEventDto } from 'src/dto/update-event.dto';
 
 interface AuthenticatedRequest extends Request {
   user: User;
@@ -36,6 +40,24 @@ export class EventsController {
     event.owner = undefined;
     event.isDeleted = undefined;
 
+    return event;
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(AuthGuard)
+  @Put('update/:id')
+  async updateEvent(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() request: AuthenticatedRequest,
+    @Body() updateEventDto: UpdateEventDto,
+  ) {
+    const event = await this.eventsService.updateEvent(
+      id,
+      request.user,
+      updateEventDto,
+    );
+    event.owner = undefined;
+    event.isDeleted = undefined;
     return event;
   }
 

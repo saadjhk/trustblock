@@ -1,4 +1,4 @@
-import { IsDate, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
 import { EventCities } from 'src/events/types';
 
 export class CreateEventDto {
@@ -11,7 +11,7 @@ export class CreateEventDto {
   description: string;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
   date: Date;
 
   @IsNotEmpty()

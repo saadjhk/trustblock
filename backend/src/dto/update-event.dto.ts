@@ -1,29 +1,30 @@
 import {
-  IsDate,
+  IsDateString,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
+  IsOptional,
   MinLength,
 } from 'class-validator';
 import { EventCities } from 'src/events/types';
 
 export class UpdateEventDto {
-  @IsNumber()
-  id: number;
-
   @IsNotEmpty()
   @MinLength(8)
+  @IsOptional()
   name: string;
 
   @IsNotEmpty()
   @MinLength(8)
+  @IsOptional()
   description: string;
 
   @IsNotEmpty()
-  @IsDate()
+  @IsDateString()
+  @IsOptional()
   date: Date;
 
   @IsNotEmpty()
   @IsEnum(EventCities)
+  @IsOptional()
   city: EventCities;
 }

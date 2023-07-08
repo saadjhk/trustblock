@@ -20,16 +20,17 @@ export default class EventsService {
     return event;
   }
 
-  async updateEvent(updateEventDto: UpdateEventDto) {
+  async updateEvent(id: number, user: User, updateEventDto: UpdateEventDto) {
     const event = await this.eventsRepository.findOne({
-      where: { id: updateEventDto.id },
+      where: { id: id, owner: user },
     });
 
-    event.city = updateEventDto.city;
-    event.date = updateEventDto.date;
-    event.description = updateEventDto.description;
-    event.name = updateEventDto.name;
+    event.city = updateEventDto.city ?? event.city;
+    event.date = updateEventDto.date ?? event.date;
+    event.description = updateEventDto.description ?? event.description;
+    event.name = updateEventDto.name ?? event.name;
     await this.eventsRepository.save(event);
+    return event;
   }
 
   async deleteEvent(eventId: number) {
@@ -42,10 +43,18 @@ export default class EventsService {
   }
 
   async getEventsPaginated(skip: number, take = 10) {
-    return this.eventsRepository.find({ take, skip });
+    return this.eventsRepository.find({
+      where: { isDeleted: false },
+      take,
+      skip,
+    });
   }
 
   async getUserEventsPaginated(user: User, skip: number, take = 10) {
-    return this.eventsRepository.find({ where: { owner: user }, take, skip });
+    return this.eventsRepository.find({
+      where: { owner: user, isDeleted: false },
+      take,
+      skip,
+    });
   }
 }
