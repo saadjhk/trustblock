@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { EventCities } from 'src/events/types';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from './user.entity';
 
 @Entity()
 export class Event {
@@ -16,4 +25,25 @@ export class Event {
     nullable: false,
   })
   description: string;
+
+  @Column({
+    type: 'date',
+    nullable: false,
+  })
+  date: Date;
+
+  @Column({
+    nullable: false,
+  })
+  city: EventCities;
+
+  @Column({
+    default: false,
+    select: false,
+  })
+  isDeleted: boolean;
+
+  @ManyToOne(() => User)
+  @JoinColumn()
+  owner: User;
 }

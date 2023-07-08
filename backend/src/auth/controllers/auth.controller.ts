@@ -39,9 +39,9 @@ export class AuthController {
     );
 
     if (isRegistered) {
-      if (!user.isVerifiedEmail) {
-        throw new UnauthorizedException('Email not verified');
-      }
+      // if (!user.isVerifiedEmail) {
+      //   throw new UnauthorizedException('Email not verified');
+      // }
 
       const payload = {
         user: {

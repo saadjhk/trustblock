@@ -1,18 +1,15 @@
 import { Module } from '@nestjs/common';
-import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthController } from 'src/auth/controllers/auth.controller';
-import { EmailConfirmationController } from 'src/auth/controllers/email-confirmation.controller';
-import { AuthService } from 'src/auth/services/auth.service';
-import { EmailConfirmationService } from 'src/auth/services/email-confirmation.service';
-import { UsersService } from 'src/auth/services/users.service';
-import { EmailModule } from 'src/email/email.module';
-import { User } from 'src/entities';
+import { EventsController } from './controllers/events.controller';
+import { Event } from 'src/entities/event.entity';
+import { AuthModule } from 'src/auth/auth.module';
+import EventsService from './services/events.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]), JwtModule, EmailModule],
-  controllers: [AuthController, EmailConfirmationController],
-  providers: [UsersService, AuthService, EmailConfirmationService],
+  imports: [TypeOrmModule.forFeature([Event]), JwtModule, AuthModule],
+  controllers: [EventsController],
+  providers: [EventsService],
   exports: [],
 })
 export class EventsModule {}

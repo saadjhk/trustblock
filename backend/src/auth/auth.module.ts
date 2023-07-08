@@ -13,6 +13,6 @@ import { JwtModule } from '@nestjs/jwt';
   imports: [TypeOrmModule.forFeature([User]), JwtModule, EmailModule],
   controllers: [AuthController, EmailConfirmationController],
   providers: [UsersService, AuthService, EmailConfirmationService],
-  exports: [],
+  exports: [UsersService, AuthService],
 })
 export class AuthModule {}
