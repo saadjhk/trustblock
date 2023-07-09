@@ -18,7 +18,10 @@ export class UsersController {
   @UseGuards(AuthGuard)
   @Get('profile')
   async profile(@Req() request: AuthenticatedRequest) {
-    const user = await this.usersService.getByEmail(request.user.email);
+    const user = await this.usersService.getByAddressOrEmail(
+      request.user.email,
+      request.user.evmAddress,
+    );
     user.password = undefined;
     return user;
   }

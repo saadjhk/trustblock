@@ -5,7 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
-  Req,
+  BadRequestException,
   Logger,
 } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
@@ -14,6 +14,9 @@ import { EmailConfirmationService } from '../services/email-confirmation.service
 import { SignInUserDto } from 'src/dto/sign-in-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { EvmAuthDto } from 'src/dto/evm-auth.dto';
+import { EvmAuthService } from '../services/evm-auth.service';
+import { User } from 'src/entities';
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -21,12 +24,13 @@ export class AuthController {
     private emailConfirmationService: EmailConfirmationService,
     private jwtService: JwtService,
     private configService: ConfigService,
+    private evmAuthService: EvmAuthService,
   ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post('register')
   async register(@Body() createUserDto: CreateUserDto) {
-    await this.authService.registerUser(createUserDto);
+    await this.authService.registerViaCredentials(createUserDto);
     await this.emailConfirmationService.sendVerificationLink(
       createUserDto.email,
     );
@@ -36,7 +40,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('signin')
   async signin(@Body() signinDto: SignInUserDto) {
-    const { isRegistered, user } = await this.authService.verifyLogin(
+    const { isRegistered, user } = await this.authService.verifyCredentials(
       signinDto,
     );
 
@@ -65,8 +69,35 @@ export class AuthController {
     }
   }
 
-  @Post('callback/credentials')
-  async credentialsCallback(@Req() request) {
-    Logger.log(request.body);
+  @HttpCode(HttpStatus.OK)
+  @Post('evm')
+  async authEvm(@Body() evmAuthDto: EvmAuthDto) {
+    const isValid = await this.evmAuthService.verifyEvmUser(evmAuthDto);
+    let registered: User | null = null;
+    if (isValid) {
+      registered = await this.evmAuthService.addressIsRegistered(evmAuthDto);
+
+      if (!registered) {
+        registered = await this.evmAuthService.registerViaAddress(evmAuthDto);
+      }
+
+      const payload = {
+        user: {
+          evmAddress: registered.evmAddress,
+          id: registered.id,
+        },
+      };
+
+      const token = this.jwtService.sign(payload, {
+        secret: this.configService.get('JWT_VERIFICATION_TOKEN_SECRET'),
+        expiresIn: `${this.configService.get(
+          'JWT_VERIFICATION_TOKEN_EXPIRATION_TIME',
+        )}`,
+      });
+
+      return { accessToken: token };
+    } else {
+      throw new BadRequestException();
+    }
   }
 }
