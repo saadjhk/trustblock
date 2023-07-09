@@ -20,6 +20,6 @@ import { EvmAuthService } from './services/evm-auth.service';
     EmailConfirmationService,
     EvmAuthService,
   ],
-  exports: [UsersService, AuthService],
+  exports: [UsersService, AuthService, EvmAuthService],
 })
 export class AuthModule {}

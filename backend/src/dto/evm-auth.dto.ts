@@ -11,6 +11,5 @@ export class EvmAuthDto {
   signature: string;
 
   @IsNotEmpty()
-  @Transform((param) => param.value.toLowerCase())
   address: string;
 }

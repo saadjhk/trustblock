@@ -72,6 +72,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('evm')
   async authEvm(@Body() evmAuthDto: EvmAuthDto) {
+    evmAuthDto.address = evmAuthDto.address.toLowerCase();
     const isValid = await this.evmAuthService.verifyEvmUser(evmAuthDto);
     let registered: User | null = null;
     if (isValid) {

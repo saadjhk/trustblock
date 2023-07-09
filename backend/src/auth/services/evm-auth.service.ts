@@ -12,9 +12,19 @@ export class EvmAuthService {
     private readonly userService: UsersService,
   ) {}
 
-  async verifyEvmUser(evmDto: EvmAuthDto) {
+  async verifySignature(address: string, message: string, signature: string) {
     let signerAddr: string | null = null;
 
+    try {
+      signerAddr = await ethers.verifyMessage(message, signature);
+    } catch (error: any) {
+      Logger.log(error.toString());
+    }
+
+    return signerAddr && signerAddr.toLowerCase() === address.toLowerCase();
+  }
+
+  async isContractWhiteListed(address: string) {
     const provider = new ethers.JsonRpcProvider(
       this.configService.get('EVM_CHAIN_RPC'),
     );
@@ -25,26 +35,29 @@ export class EvmAuthService {
       provider,
     );
 
+    let isWhiteListed = false;
+
     try {
-      signerAddr = await ethers.verifyMessage(evmDto.message, evmDto.signature);
+      isWhiteListed = await contract.whitelisting(address);
     } catch (error: any) {
       Logger.log(error.toString());
     }
 
-    if (
-      signerAddr &&
-      signerAddr.toLowerCase() === evmDto.address.toLowerCase()
-    ) {
-      let isWhiteListed = false;
-      try {
-        isWhiteListed = await contract.whitelisting(evmDto.address);
-      } catch (error: any) {
-        Logger.log(error.toString());
-      }
-      return isWhiteListed;
-    }
+    return isWhiteListed;
+  }
 
-    return false;
+  async verifyEvmUser(evmDto: EvmAuthDto) {
+    let isWhiteListed = false;
+    let isSignatureValid = false;
+
+    isSignatureValid = await this.verifySignature(
+      evmDto.address,
+      evmDto.message,
+      evmDto.signature,
+    );
+    isWhiteListed = await this.isContractWhiteListed(evmDto.address);
+
+    return isWhiteListed && isSignatureValid;
   }
 
   async registerViaAddress(evmDto: EvmAuthDto) {

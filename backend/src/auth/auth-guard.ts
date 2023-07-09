@@ -8,14 +8,14 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UsersService } from './services/users.service';
-import { ethers } from 'ethers';
-import * as UserWhiteListAbi from '../abi/UserWhiteList.abi.json';
 import { User } from '../entities/user.entity';
+import { EvmAuthService } from './services/evm-auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private usersService: UsersService,
+    private evmAuthService: EvmAuthService,
     private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
@@ -33,17 +33,7 @@ export class AuthGuard implements CanActivate {
 
       let user: User | null = null;
       if (payload.user.evmAddress && payload.user.evmAddress.length > 0) {
-        const provider = new ethers.JsonRpcProvider(
-          this.configService.get('EVM_CHAIN_RPC'),
-        );
-
-        const contract = new ethers.Contract(
-          this.configService.get('EVM_AUTH_CONTRACT_ADDRESS'),
-          UserWhiteListAbi,
-          provider,
-        );
-
-        const isWhiteListed = await contract.whitelisting(
+        const isWhiteListed = await this.evmAuthService.isContractWhiteListed(
           payload.user.evmAddress,
         );
 
