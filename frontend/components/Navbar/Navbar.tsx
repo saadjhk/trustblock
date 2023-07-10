@@ -44,8 +44,8 @@ export default function Navbar() {
             </li>
           )}
           {session.status !== "authenticated" && (
-            <li className="font-semibold text-gray-700" onClick={() => {}}>
-              Signup
+            <li className="font-semibold text-gray-700">
+              <Link href={"/register"}>Signup</Link>
             </li>
           )}
           {session.status === "authenticated" && (
