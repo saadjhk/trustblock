@@ -1,4 +1,3 @@
-import { Transform } from 'class-transformer';
 import { IsNotEmpty, MinLength } from 'class-validator';
 
 export class EvmAuthDto {

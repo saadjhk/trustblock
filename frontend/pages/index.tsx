@@ -1,8 +1,8 @@
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { EEvent } from "../interfaces/event";
 import axios from "axios";
 import EventCard from "../components/EventCard/EventCard";
+
 export default function Home() {
   const [events, setEvents] = useState<EEvent[]>([]);
   const [failedFetch, setFailedFetch] = useState<boolean>(false);

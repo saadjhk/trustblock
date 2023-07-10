@@ -105,6 +105,7 @@ export default function EventForm(props: EventFormProps) {
               : alert("Error submitting form");
           try {
             await call;
+            router.push('/');
           } catch (error: any) {
             console.log(error.toString());
           }
